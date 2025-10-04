@@ -17,7 +17,7 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 
 <details>
 <summary>Ver estructura</summary>
-
+```
 📁 ACTIVIDAD-2
 ├── index.html
 ├── styles.css
@@ -29,7 +29,7 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 ├── books.js
 ├── loans.js
 └── returns.js
-
+```
 </details>
 ---
 
