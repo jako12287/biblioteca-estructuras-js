@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sistema de Gestión de Biblioteca — Prototipo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="header-home" id="top-main">
+      <h1>Sistema de Gestión de Biblioteca</h1>
+      <p class="muted">
+        Prototipo para evidenciar estructuras de datos lineales (Arrays, Cola, Pila)
+      </p>
+    </header>
+
+    <main id="app">
+      <!-- Home de navegacion -->
+      <section id="home" class="section-home" aria-labelledby="tab-home">
+        <img src="./assets/logo.png" class="image-logo" alt="" />
+        <a href="#users">
+          <div class="card-home">
+            <h3>Usuarios</h3>
+            <p>👥</p>
+          </div>
+        </a>
+        <a href="#books">
+          <div class="card-home">
+            <h3>Libros</h3>
+            <p>📚</p>
+          </div>
+        </a>
+        <a href="#loans">
+          <div class="card-home">
+            <h3>Préstamos</h3>
+            <p>🤝</p>
+          </div>
+        </a>
+        <a href="#returns">
+          <div class="card-home">
+            <h3>Devoluciones</h3>
+            <p>↩️</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- Usuarios -->
+      <section id="users" aria-labelledby="tab-users" class="section-users">
+        <div class="title-container">
+          <h2>Usuarios</h2>
+          <a href="#top-main" aria-label="Volver al inicio"><p>🏠</p></a>
+        </div>
+
+        <form id="user-form" novalidate>
+          <div class="row">
+            <label>Nombre completo
+              <input name="fullName" autocomplete="off" required />
+            </label>
+            <label>Documento
+              <input name="docId" autocomplete="off" required />
+            </label>
+          </div>
+          <div class="row">
+            <label>Email
+              <input name="email" type="email" autocomplete="off" required />
+            </label>
+            <div>
+              <span class="muted">Estado inicial: Activo</span>
+            </div>
+          </div>
+          <button type="submit" class="primary">Crear usuario</button>
+          <div id="user-feedback" class="feedback" aria-live="polite"></div>
+        </form>
+
+        <div class="toolbar">
+          <input id="user-search" placeholder="Buscar por nombre, documento o email" />
+          <span id="user-count" class="muted"></span>
+        </div>
+
+        <table aria-describedby="user-count">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Documento</th>
+              <th>Email</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </section>
+
+      <!-- Libros -->
+      <section id="books" aria-labelledby="tab-books">
+        <div class="title-container">
+          <h2>Libros</h2>
+          <a href="#top-main" aria-label="Volver al inicio"><p>🏠</p></a>
+        </div>
+
+        <form id="book-form" novalidate>
+          <div class="row">
+            <label>Título
+              <input name="title" required />
+            </label>
+            <label>Autor
+              <input name="author" required />
+            </label>
+          </div>
+          <div class="row">
+            <label>ISBN
+              <input name="isbn" required />
+            </label>
+            <label>Año
+              <input name="year" type="number" min="0" step="1" />
+            </label>
+          </div>
+          <div class="row">
+            <label>Género
+              <input name="genre" />
+            </label>
+            <label>Copias (total)
+              <input name="copiesTotal" type="number" min="0" step="1" value="1" />
+            </label>
+          </div>
+          <button type="submit" class="primary">Crear libro</button>
+          <div id="book-feedback" class="feedback" aria-live="polite"></div>
+        </form>
+
+        <div class="toolbar">
+          <input id="book-search" placeholder="Buscar por título, autor o ISBN" />
+          <span id="book-count" class="muted"></span>
+        </div>
+
+        <table aria-describedby="book-count">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Autor</th>
+              <th>ISBN</th>
+              <th>Año</th>
+              <th>Género</th>
+              <th>Copias</th>
+              <th>Disponibles</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="books-tbody"></tbody>
+        </table>
+      </section>
+
+      <!-- Préstamos -->
+      <section id="loans" aria-labelledby="tab-loans">
+        <div class="title-container">
+          <h2>Préstamos</h2>
+          <a href="#top-main" aria-label="Volver al inicio"><p>🏠</p></a>
+        </div>
+
+        <form id="loan-form" class="loan-form" novalidate>
+          <div class="row">
+            <label>Usuario
+              <select id="loan-user" name="userId" required></select>
+            </label>
+            <label>Libro
+              <select id="loan-book" name="bookId" required></select>
+            </label>
+          </div>
+          <button type="submit" class="primary">Agregar solicitud a la cola</button>
+          <div id="loan-feedback" class="feedback" aria-live="polite"></div>
+        </form>
+
+        <h3>Cola de solicitudes</h3>
+        <div id="loan-queue" class="list" aria-live="polite"></div>
+
+        <div class="toolbar">
+          <button id="loan-attend" class="primary">Atender siguiente</button>
+          <span id="loan-status" class="muted"></span>
+        </div>
+
+        <h3>Préstamos activos</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Libro</th>
+              <th>Fecha préstamo</th>
+            </tr>
+          </thead>
+          <tbody id="loans-active-tbody"></tbody>
+        </table>
+      </section>
+
+      <!-- Devoluciones -->
+      <section id="returns" aria-labelledby="tab-returns">
+        <div class="title-container">
+          <h2>Devoluciones</h2>
+          <a href="#top-main" aria-label="Volver al inicio"><p>🏠</p></a>
+        </div>
+
+        <form id="return-form" class="return-form" novalidate>
+          <div class="row">
+            <label>Usuario
+              <select id="return-user" name="userId" required></select>
+            </label>
+            <label>Libro
+              <select id="return-book" name="bookId" required></select>
+            </label>
+          </div>
+          <button type="submit" class="primary">Registrar devolución</button>
+          <div id="return-feedback" class="feedback" aria-live="polite"></div>
+        </form>
+
+        <h3>Devoluciones recientes</h3>
+        <div id="return-stack" class="list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
