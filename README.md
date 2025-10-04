@@ -15,16 +15,17 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 
 ## 🧩 Estructura del proyecto
 
-📁
-│
-├── index.html # Interfaz principal (HTML)
-├── styles.css # Estilos generales
-├── main.js # Punto de entrada (inicializa módulos)
-│
+📁 ACTIVIDAD-2
+├── index.html
+├── styles.css
+├── main.js
 └── src/
-├── assets/ # Recursos (logo u otros)
+├── assets/
 └── models/
-└── users.js # Módulo de usuarios (Array)
+├── users.js
+├── books.js
+├── loans.js
+└── returns.js
 
 
 ---
