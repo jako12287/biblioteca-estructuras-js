@@ -33,7 +33,8 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
         ├── loans.js
         └── returns.js
 
-</details> ```
+```
+</details> 
 ---
 
 ## 🧠 Estructuras de datos implementadas
