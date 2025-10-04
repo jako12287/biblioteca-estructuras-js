@@ -17,10 +17,6 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 
 <details>
 <summary>Ver estructura</summary>
-## 🧩 Estructura del proyecto
-
-<details>
-<summary>Ver estructura</summary>
 
 ```text
 📁 ACTIVIDAD-2
