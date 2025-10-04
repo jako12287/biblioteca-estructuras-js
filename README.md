@@ -17,19 +17,19 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 
 <details>
 <summary>Ver estructura</summary>
-```
 📁 ACTIVIDAD-2
-├── index.html
-├── styles.css
-├── main.js
+│
+├── index.html # Interfaz principal (HTML)
+├── styles.css # Estilos generales
+├── main.js # Punto de entrada (inicializa módulos)
+│
 └── src/
-├── assets/
+├── assets/ # Recursos (logo u otros)
 └── models/
-├── users.js
-├── books.js
-├── loans.js
-└── returns.js
-```
+├── users.js # Módulo de usuarios (Array)
+├── books.js # Módulo de libros (Array)
+├── loans.js # Módulo de préstamos (Cola FIFO)
+└── returns.js # Módulo de devoluciones (Pila LIFO)
 </details>
 ---
 
