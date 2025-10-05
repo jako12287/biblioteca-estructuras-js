@@ -27,6 +27,7 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 │
 └── src/
     ├── assets/
+    ├── data/
     └── models/
         ├── users.js
         ├── books.js
