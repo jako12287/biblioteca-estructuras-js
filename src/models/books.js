@@ -1,3 +1,4 @@
+import { buildBookTree } from "./trees.js";
 const LS_KEY = "books_v1";
 
 function loadBooksSafe() {
@@ -13,11 +14,13 @@ function loadBooksSafe() {
 }
 
 let books = loadBooksSafe();
+let booksTree = buildBookTree(books);
 
-window.addEventListener("books:updated", ()=>{
-    books = loadBooksSafe()
-    render()
-})
+window.addEventListener("books:updated", () => {
+  books = loadBooksSafe();
+  booksTree = buildBookTree(books);
+  render();
+});
 
 let form;
 let feedback;
@@ -43,7 +46,10 @@ export function initBooks() {
 
 function save() {
   localStorage.setItem(LS_KEY, JSON.stringify(books));
-  window.dispatchEvent(new CustomEvent("books:updated", { detail: { count: books.length } }));
+  booksTree = buildBookTree(books);
+  window.dispatchEvent(
+    new CustomEvent("books:updated", { detail: { count: books.length } })
+  );
 }
 
 function uid() {
@@ -136,6 +142,10 @@ function onTableClick(e) {
       render();
     }
   }
+}
+
+export function findBookByIsbn(isbn) {
+  return booksTree.search(isbn) || null;
 }
 
 function render() {

@@ -1,6 +1,8 @@
+import { buildUserTree } from "./trees.js";
 const LS_KEY = "users_v1";
 
 let users = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+let usersTree = buildUserTree(users);
 
 let form;
 let feedback;
@@ -9,7 +11,6 @@ let countSpan;
 let tbody;
 
 export function initUsers() {
-
   users = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
 
   form = document.getElementById("user-form");
@@ -23,10 +24,11 @@ export function initUsers() {
   form.addEventListener("submit", onCreate);
   searchInput.addEventListener("input", render);
   tbody.addEventListener("click", onTableClick);
-  
+
   window.addEventListener("loans:updated", render);
   window.addEventListener("users:updated", () => {
     users = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+    usersTree = buildUserTree(users);
     render();
   });
 
@@ -35,7 +37,10 @@ export function initUsers() {
 
 function save() {
   localStorage.setItem(LS_KEY, JSON.stringify(users));
-  window.dispatchEvent(new CustomEvent("users:updated", { detail: { count: users.length } }));
+  usersTree = buildUserTree(users);
+  window.dispatchEvent(
+    new CustomEvent("users:updated", { detail: { count: users.length } })
+  );
 }
 
 function uid() {
@@ -47,7 +52,7 @@ function hasActiveLoan(userId) {
     const raw = localStorage.getItem("loans_v1");
     if (!raw) return false;
     const { active = [] } = JSON.parse(raw) || {};
-    return active.some(l => l.userId === userId);
+    return active.some((l) => l.userId === userId);
   } catch {
     return false;
   }
@@ -56,10 +61,17 @@ function hasActiveLoan(userId) {
 function getFiltered() {
   const q = (searchInput.value || "").trim().toLowerCase();
   if (!q) return users;
-  return users.filter(u =>
-    String(u.fullName || "").toLowerCase().includes(q) ||
-    String(u.docId || "").toLowerCase().includes(q) ||
-    String(u.email || "").toLowerCase().includes(q)
+  return users.filter(
+    (u) =>
+      String(u.fullName || "")
+        .toLowerCase()
+        .includes(q) ||
+      String(u.docId || "")
+        .toLowerCase()
+        .includes(q) ||
+      String(u.email || "")
+        .toLowerCase()
+        .includes(q)
   );
 }
 
@@ -79,11 +91,11 @@ function onCreate(e) {
     feedback.textContent = "El email no es valido";
     return;
   }
-  if (users.some(u => u.email === email)) {
+  if (users.some((u) => u.email === email)) {
     feedback.textContent = "Ese email ya existe";
     return;
   }
-  if (users.some(u => u.docId === docId)) {
+  if (users.some((u) => u.docId === docId)) {
     feedback.textContent = "Ese documento ya existe";
     return;
   }
@@ -101,7 +113,7 @@ function onTableClick(e) {
   const action = btn.dataset.action;
 
   if (action === "toggle") {
-    const u = users.find(x => x.id === id);
+    const u = users.find((x) => x.id === id);
     if (u) {
       u.active = !u.active;
       save();
@@ -113,11 +125,15 @@ function onTableClick(e) {
       return;
     }
     if (confirm("¿Deseas eliminar este usuario?")) {
-      users = users.filter(x => x.id !== id);
+      users = users.filter((x) => x.id !== id);
       save();
       render();
     }
   }
+}
+
+export function findUserByDoc(docId) {
+  return usersTree.search(docId) || null;
 }
 
 function render() {
@@ -129,19 +145,24 @@ function render() {
     return;
   }
 
-  tbody.innerHTML = list.map(u => {
-    const bloqueado = hasActiveLoan(u.id);
-    return `
+  tbody.innerHTML = list
+    .map((u) => {
+      const bloqueado = hasActiveLoan(u.id);
+      return `
       <tr>
         <td data-label="Nombre">${escapeHtml(u.fullName)}</td>
         <td data-label="Documento">${escapeHtml(u.docId)}</td>
         <td data-label="Email">${escapeHtml(u.email)}</td>
         <td data-label="Estado">
-          <span class="badge ${u.active ? "ok" : "warn"}">${u.active ? "Activo" : "Inactivo"}</span>
+          <span class="badge ${u.active ? "ok" : "warn"}">${
+        u.active ? "Activo" : "Inactivo"
+      }</span>
         </td>
         <td data-label="Acciones">
           <div class="table-actions">
-            <button class="btn" data-action="toggle" data-id="${u.id}">${u.active ? "Desactivar" : "Activar"}</button>
+            <button class="btn" data-action="toggle" data-id="${u.id}">${
+        u.active ? "Desactivar" : "Activar"
+      }</button>
             ${
               bloqueado
                 ? `<button class="btn btn-danger" disabled title="No disponible: tiene préstamo activo">Eliminar</button>`
@@ -151,7 +172,8 @@ function render() {
         </td>
       </tr>
     `;
-  }).join("");
+    })
+    .join("");
 }
 
 function clearFeedback() {
