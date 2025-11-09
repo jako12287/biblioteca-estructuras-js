@@ -1,15 +1,17 @@
 # 📚 Sistema de Gestión de Biblioteca — Prototipo Académico
 
-Este proyecto es un **prototipo educativo** desarrollado en **JavaScript Vanilla** que implementa un **sistema de gestión de biblioteca**.  
-Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, colas y pilas) dentro de un caso práctico.
+Este proyecto es un prototipo educativo desarrollado en JavaScript Vanilla que implementa un sistema de gestión de biblioteca.
+Su objetivo es evidenciar el uso combinado de estructuras de datos lineales y no lineales, aplicadas en un contexto funcional y académico.
 
 ---
 
 ## 🎯 Objetivo académico
 
-- Comprender el uso de **arrays, colas y pilas** como estructuras de datos.  
-- Aplicarlas en un **proyecto funcional** que simula un sistema de biblioteca.  
-- Integrar conceptos de **DOM**, **eventos** y **almacenamiento local (`localStorage`)** para mostrar cómo se gestionan los datos en un entorno realista.
+- Comprender el uso de arrays, colas, pilas y árboles binarios de búsqueda (ABB).
+
+- Aplicar dichas estructuras en un proyecto funcional que simula la gestión de una biblioteca virtual.
+
+- Integrar conceptos de DOM, eventos, almacenamiento local (localStorage) y organización jerárquica de datos.
 
 ---
 
@@ -32,7 +34,9 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
         ├── users.js
         ├── books.js
         ├── loans.js
-        └── returns.js
+        ├──returns.js
+        └──trees.js
+
 
 ```
 </details> 
@@ -40,58 +44,70 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 
 ## 🧠 Estructuras de datos implementadas
 
-### 1️⃣ **Usuarios → Array**
-- Se utiliza un **array** para almacenar la lista de usuarios.
-- Cada usuario es un objeto con:  
-  `{ id, fullName, docId, email, active }`.
-- Operaciones principales:
-  - **Insertar** un usuario (`unshift`)
-  - **Buscar** usuarios (filtro con `filter`)
-  - **Actualizar** estado (activar/desactivar)
-  - **Eliminar** usuarios del array (`filter`)
+### 1️⃣ Usuarios → Árbol Binario de Búsqueda (ABB)
 
-✅ **Estructura aplicada:** **Array dinámico**.  
-📌 Justificación: permite manejar de forma flexible listas de usuarios con operaciones de inserción, búsqueda y eliminación.
+- Indexa usuarios por su documento (docId).
+
+- Permite búsquedas más eficientes que un recorrido lineal.
+
+- Operaciones principales:
+
+- Insertar nuevo usuario.
+
+- Buscar usuario por documento.
+
+- Actualizar o eliminar usuario del árbol.
+
+✅ Estructura aplicada: Árbol binario de búsqueda.
+📌 Justificación: mejora la eficiencia en búsquedas frecuentes al reducir la complejidad de O(n) a O(log n).
 
 ---
 
-### 2️⃣ **Libros → Array**
-- Se guarda en un **array**.
-- Cada libro contiene:  
-  `{ id, title, author, isbn, year, genre, copiesTotal, copiesAvailable }`.
-- Operaciones principales:
-  - **Insertar** libros
-  - **Buscar** por título, autor o ISBN
-  - **Modificar stock** (`copiesTotal` y `copiesAvailable`)
-  - **Eliminar** libros
+### 2️⃣ Libros → Árbol Binario de Búsqueda (ABB)
 
-✅ **Estructura aplicada:** **Array**.  
-📌 Justificación: los libros representan un inventario en el que es fácil agregar, modificar o eliminar registros.
+- Cada libro se indexa por su código ISBN.
+
+- Las búsquedas por ISBN son más rápidas que con arrays tradicionales.
+
+- Operaciones principales:
+
+- Insertar libro.
+
+- Buscar por ISBN.
+
+- Modificar o eliminar libro en el árbol.
+
+✅ Estructura aplicada: Árbol binario de búsqueda.
+📌 Justificación: facilita búsquedas eficientes dentro de grandes catálogos.
 
 ---
 
-### 3️⃣ **Préstamos → Cola (FIFO)**
-- La cola representa las solicitudes de préstamo de libros.  
-- **Regla:** el primero que solicita es el primero en ser atendido (**First In, First Out**).
-- Operaciones principales:
-  - **Encolar** solicitud (`push`)
-  - **Atender préstamo** (`shift`)
-  - Validar stock de libros antes de aprobar préstamo.
+### 3️⃣ Préstamos → Cola (FIFO)
 
-✅ **Estructura aplicada:** **Cola (FIFO)**.  
-📌 Justificación: refleja la lógica real de atender solicitudes en el orden de llegada.
+- Representa las solicitudes de préstamo.
+
+- Regla: First In, First Out.
+
+- Se mantiene la misma lógica de la versión anterior.
+
+✅ Estructura aplicada: Cola.
 
 ---
 
-### 4️⃣ **Devoluciones → Pila (LIFO)**
-- La pila guarda el historial de devoluciones.  
-- **Regla:** la devolución más reciente se muestra primero (**Last In, First Out**).
-- Operaciones principales:
-  - **Apilar devolución** (`push`)
-  - **Mostrar devoluciones recientes** (últimos en la pila)
+### 4️⃣ Devoluciones → Pila (LIFO)
 
-✅ **Estructura aplicada:** **Pila (LIFO)**.  
-📌 Justificación: permite visualizar primero las devoluciones más recientes, como un historial.
+- Guarda el historial de devoluciones, mostrando primero las más recientes.
+
+✅ Estructura aplicada: Pila.
+
+---
+
+---
+
+### 5️⃣ Usuarios y Libros (respaldo persistente) → Arrays
+
+Se siguen utilizando arrays en localStorage para mantener persistencia de datos,
+pero el árbol se genera dinámicamente en memoria cada vez que se actualiza el almacenamiento.
 
 ---
 
@@ -112,12 +128,13 @@ Su objetivo es **evidenciar el uso de estructuras de datos lineales** (arrays, c
 
  ## Resumen
 
-| Módulo           | Estructura usada | Justificación                                                       |
-| ---------------- | ---------------- | ------------------------------------------------------------------- |
-| **Usuarios**     | Array            | Manejo flexible de una lista con inserción, búsqueda y eliminación. |
-| **Libros**       | Array            | Gestión de inventario con actualización dinámica de stock.          |
-| **Préstamos**    | Cola (FIFO)      | Se atiende al primer usuario que solicita.                          |
-| **Devoluciones** | Pila (LIFO)      | Se muestran primero las devoluciones más recientes.                 |
+| Módulo           | Estructura usada                           | Justificación                                                        |
+| ---------------- | ------------------------------------------ | --------------------------------------------------------------------|
+| **Usuarios**     | Árbol Binario de Búsqueda (ABB)            | Búsqueda eficiente por documento.                                    |
+| **Libros**       | Árbol Binario de Búsqueda (ABB)            | Optimiza búsquedas por ISBN.                                        |
+| **Préstamos**    | Cola (FIFO)                                | Se atiende al primer usuario que solicita.                          |
+| **Devoluciones** | Pila (LIFO)                                | Se muestran primero las devoluciones más recientes.                 |
+| **Persistencia** | Arrays.                                    | Mantiene los datos almacenados en localStorage.                     |
 
 
 👨‍🏫 Autor
