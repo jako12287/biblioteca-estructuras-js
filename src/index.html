@@ -11,7 +11,8 @@
     <header class="header-home" id="top-main">
       <h1>Sistema de Gestión de Biblioteca</h1>
       <p class="muted">
-        Prototipo para evidenciar estructuras de datos lineales (Arrays, Cola, Pila)
+        Prototipo para evidenciar estructuras de datos lineales y no lineales
+        (Arrays, Cola, Pila y Árboles Binarios de Búsqueda)
       </p>
     </header>
 
@@ -54,15 +55,18 @@
 
         <form id="user-form" novalidate>
           <div class="row">
-            <label>Nombre completo
+            <label
+              >Nombre completo
               <input name="fullName" autocomplete="off" required />
             </label>
-            <label>Documento
+            <label
+              >Documento
               <input name="docId" autocomplete="off" required />
             </label>
           </div>
           <div class="row">
-            <label>Email
+            <label
+              >Email
               <input name="email" type="email" autocomplete="off" required />
             </label>
             <div>
@@ -74,7 +78,10 @@
         </form>
 
         <div class="toolbar">
-          <input id="user-search" placeholder="Buscar por nombre, documento o email" />
+          <input
+            id="user-search"
+            placeholder="Buscar por nombre, documento o email"
+          />
           <span id="user-count" class="muted"></span>
         </div>
 
@@ -101,27 +108,39 @@
 
         <form id="book-form" novalidate>
           <div class="row">
-            <label>Título
+            <label
+              >Título
               <input name="title" required />
             </label>
-            <label>Autor
+            <label
+              >Autor
               <input name="author" required />
             </label>
           </div>
           <div class="row">
-            <label>ISBN
+            <label
+              >ISBN
               <input name="isbn" required />
             </label>
-            <label>Año
+            <label
+              >Año
               <input name="year" type="number" min="0" step="1" />
             </label>
           </div>
           <div class="row">
-            <label>Género
+            <label
+              >Género
               <input name="genre" />
             </label>
-            <label>Copias (total)
-              <input name="copiesTotal" type="number" min="0" step="1" value="1" />
+            <label
+              >Copias (total)
+              <input
+                name="copiesTotal"
+                type="number"
+                min="0"
+                step="1"
+                value="1"
+              />
             </label>
           </div>
           <button type="submit" class="primary">Crear libro</button>
@@ -129,7 +148,10 @@
         </form>
 
         <div class="toolbar">
-          <input id="book-search" placeholder="Buscar por título, autor o ISBN" />
+          <input
+            id="book-search"
+            placeholder="Buscar por título, autor o ISBN"
+          />
           <span id="book-count" class="muted"></span>
         </div>
 
@@ -159,14 +181,18 @@
 
         <form id="loan-form" class="loan-form" novalidate>
           <div class="row">
-            <label>Usuario
+            <label
+              >Usuario
               <select id="loan-user" name="userId" required></select>
             </label>
-            <label>Libro
+            <label
+              >Libro
               <select id="loan-book" name="bookId" required></select>
             </label>
           </div>
-          <button type="submit" class="primary">Agregar solicitud a la cola</button>
+          <button type="submit" class="primary">
+            Agregar solicitud a la cola
+          </button>
           <div id="loan-feedback" class="feedback" aria-live="polite"></div>
         </form>
 
@@ -200,10 +226,12 @@
 
         <form id="return-form" class="return-form" novalidate>
           <div class="row">
-            <label>Usuario
+            <label
+              >Usuario
               <select id="return-user" name="userId" required></select>
             </label>
-            <label>Libro
+            <label
+              >Libro
               <select id="return-book" name="bookId" required></select>
             </label>
           </div>
@@ -215,7 +243,5 @@
         <div id="return-stack" class="list" aria-live="polite"></div>
       </section>
     </main>
-
-    
   </body>
 </html>
