@@ -1,3 +1,11 @@
+import {
+  graphAddNode,
+  graphAddEdge,
+  graphSyncWithCatalog,
+  graphTopBooksForUser,
+  graphMostPopularBooks,
+} from "./graph.js";
+
 const LS_LOANS = "loans_v1";
 const LS_USERS = "users_v1";
 const LS_BOOKS = "books_v1";
@@ -23,15 +31,17 @@ export function initLoans() {
   attendBtn = document.getElementById("loan-attend");
   statusSpan = document.getElementById("loan-status");
   activeTbody = document.getElementById("loans-active-tbody");
+  graphSyncWithCatalog();
+  window.addEventListener("users:updated", graphSyncWithCatalog);
+  window.addEventListener("books:updated", graphSyncWithCatalog);
 
   window.addEventListener("loans:updated", () => {
-  const state = loadSafe(LS_LOANS, { queue: [], active: [] });
-  queue = state.queue || [];
-  active = state.active || [];
-  renderQueue();
-  renderActive();
-});
-
+    const state = loadSafe(LS_LOANS, { queue: [], active: [] });
+    queue = state.queue || [];
+    active = state.active || [];
+    renderQueue();
+    renderActive();
+  });
 
   if (
     !form ||
@@ -83,32 +93,39 @@ function setBooks(newBooks) {
   localStorage.setItem(LS_BOOKS, JSON.stringify(newBooks));
 }
 
-
 function populateSelectsPreservandoSeleccion() {
   const prevUser = selUser.value;
   const prevBook = selBook.value;
 
-  const users = getUsers().filter(u => u.active !== false); // solo activos
+  const users = getUsers().filter((u) => u.active !== false); // solo activos
   const books = getBooks();
 
-  selUser.innerHTML = users.map(u =>
-    `<option value="${u.id}">${esc(u.fullName)} — ${esc(u.docId)}</option>`
-  ).join("");
+  selUser.innerHTML = users
+    .map(
+      (u) =>
+        `<option value="${u.id}">${esc(u.fullName)} — ${esc(u.docId)}</option>`
+    )
+    .join("");
 
-  selBook.innerHTML = books.map(b => {
-    const disp = Number(b.copiesAvailable ?? 0);
-    const label = `${esc(b.title)} — ${esc(b.isbn)}${disp === 0 ? " (0 disp.)" : ""}`;
-    return `<option value="${b.id}">${label}</option>`;
-  }).join("");
+  selBook.innerHTML = books
+    .map((b) => {
+      const disp = Number(b.copiesAvailable ?? 0);
+      const label = `${esc(b.title)} — ${esc(b.isbn)}${
+        disp === 0 ? " (0 disp.)" : ""
+      }`;
+      return `<option value="${b.id}">${label}</option>`;
+    })
+    .join("");
 
-  if (prevUser && users.some(u => u.id === prevUser)) selUser.value = prevUser;
-  if (prevBook && books.some(b => b.id === prevBook)) selBook.value = prevBook;
+  if (prevUser && users.some((u) => u.id === prevUser))
+    selUser.value = prevUser;
+  if (prevBook && books.some((b) => b.id === prevBook))
+    selBook.value = prevBook;
 }
 
 function populateSelects() {
   populateSelectsPreservandoSeleccion();
 }
-
 
 window.addEventListener("users:updated", () =>
   populateSelectsPreservandoSeleccion()
@@ -178,12 +195,23 @@ function onAttendNext() {
     bookId: next.bookId,
     loanDate: new Date().toISOString(),
   });
+  graphAddNode("USER", next.userId);
+  graphAddNode("BOOK", next.bookId);
+  graphAddEdge("USER", next.userId, "BOOK", next.bookId, {
+    type: "LOAN",
+    at: new Date().toISOString(),
+  });
+
   queue.shift();
   saveLoans();
 
   renderQueue();
   renderActive();
   statusSpan.textContent = "Préstamo registrado";
+  const topForUser = graphTopBooksForUser(next.userId, 3);
+  const popular = graphMostPopularBooks(3);
+  console.log("Top libros para usuario:", topForUser);
+  console.log("Libros más populares:", popular);
 }
 
 function renderQueue() {

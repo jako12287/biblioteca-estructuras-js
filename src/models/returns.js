@@ -1,3 +1,5 @@
+import { graphAddNode, graphAddEdge, graphSyncWithCatalog } from "./graph.js";
+
 const LS_RETURNS = "returns_v1";
 const LS_LOANS = "loans_v1";
 const LS_USERS = "users_v1";
@@ -59,6 +61,10 @@ export function initReturns() {
 
   form.addEventListener("submit", onReturnSubmit);
   selUser.addEventListener("change", () => populateBooksForUser(selUser.value));
+
+  graphSyncWithCatalog();
+  window.addEventListener("users:updated", graphSyncWithCatalog);
+  window.addEventListener("books:updated", graphSyncWithCatalog);
 
   window.addEventListener("users:updated", () => {
     populateUsersFromActive();
@@ -191,6 +197,13 @@ function onReturnSubmit(e) {
 
   active.splice(idx, 1);
   setActiveLoans(active);
+
+  graphAddNode("USER", userId);
+  graphAddNode("BOOK", bookId);
+  graphAddEdge("USER", userId, "BOOK", bookId, {
+    type: "RETURN",
+    at: new Date().toISOString(),
+  });
 
   stack.unshift({
     id: uid(),
